@@ -64,8 +64,10 @@ class XCover:
             auth=XCoverAuth(self.config.auth_config),
             headers={**self.default_headers, **headers},
         )
+
         prepared_request: requests.PreparedRequest = session.prepare_request(request)
-        response = session.send(prepared_request, timeout=self.config.http_timeout)
+        settings = session.merge_environment_settings(prepared_request.url, {}, None, None, None)
+        response = session.send(prepared_request, timeout=self.config.http_timeout, **settings)
 
         return response
 
